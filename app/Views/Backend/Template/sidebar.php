@@ -1,4 +1,4 @@
-<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar" style="padding:0;max-width:220px;min-width:180px;background:#222;">
+<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar" style="padding:0;max-width:220px;min-width:180px;background:#fff;">
 	<ul class="nav menu" style="margin-bottom:0;">
 		<li><a href="<?= base_url('admin/dashboard-admin'); ?>"><span class="glyphicon glyphicon-dashboard"></span> Dashboard</a></li>
 		<li class="parent">
@@ -30,12 +30,12 @@
 				</span>
 			</a>
 			<ul class="children collapse" id="sub-item-transaksi">
-				<li><a href="<?= base_url('anggota/data-peminjaman'); ?>"><span class="glyphicon glyphicon-list-alt"></span> Data Peminjaman</a></li>
-				<li><a href="<?= base_url('anggota/form-peminjaman'); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Transaksi Peminjaman</a></li>
+				<li><a href="<?= base_url('admin/data-transaksi-peminjaman'); ?>"><span class="glyphicon glyphicon-list-alt"></span> Data Peminjaman</a></li>
+				<li><a href="<?= base_url('admin/peminjaman-step1'); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Transaksi Peminjaman</a></li>
 			</ul>
 		</li>
 		<li role="presentation" class="divider"></li>
 		<li><a href="<?= base_url('admin/logout'); ?>"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 	</ul>
-	<div class="attribution" style="font-size:11px;color:#aaa;padding:10px 0 0 10px;">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/" style="color:#aaa;">Medialoot</a></div>
+	<div class="attribution" style="font-size:11px;color:#333;padding:10px 0 0 10px;">Template by <a href="http://www.medialoot.com/item/lumino-admin-bootstrap-template/" style="color:#333;">Medialoot</a></div>
 </div><!--/.sidebar-->

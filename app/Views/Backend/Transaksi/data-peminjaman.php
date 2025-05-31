@@ -14,7 +14,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Transaksi Peminjaman Buku
-                    <a href="<?= base_url('admin/peminjaman-step1') ?>" class="btn btn-primary btn-sm pull-right" style="margin-top:-5px;">
+                    <a href="<?= base_url('anggota/form-peminjaman') ?>" class="btn btn-primary btn-sm pull-right" style="margin-top:-5px;">
                         <span class="glyphicon glyphicon-plus"></span> Tambah Transaksi Peminjaman
                     </a>
                 </div>
@@ -50,7 +50,7 @@
                                 <th data-field="status_transaksi" data-sortable="true">Status Transaksi</th>
                                 <th data-field="status_ambil_buku" data-sortable="true">Status Ambil Buku</th>
                                 <th data-field="nama_admin" data-sortable="true">Admin</th>
-                                <th data-field="qr_code" data-sortable="false" data-formatter="qrCodeFormatter">QR Code</th>
+                                <th data-field="qr_code" data-sortable="false" data-formatter="qrCodeFormatter" data-width="">QR</th>
                                 <th data-field="opsi" data-sortable="false">Opsi</th>
                             </tr>
                         </thead>
@@ -58,36 +58,42 @@
                             <?php if (isset($data_peminjaman) && !empty($data_peminjaman)) : ?>
                                 <?php foreach ($data_peminjaman as $transaksi) : ?>
                                     <tr>
-                                        <td><?= esc($transaksi['no_peminjaman']) ?></td>
-                                        <td><?= esc($transaksi['nama_anggota']) ?></td> <!-- Asumsi dari join -->
-                                        <td><?= date('d-m-Y', strtotime(esc($transaksi['tgl_pinjam']))) ?></td>
-                                        <td><?= esc($transaksi['total_pinjam']) ?></td>
-                                        <td><?= esc($transaksi['daftar_judul_buku']) ?></td>
+                                        <td><?= isset($transaksi['no_peminjaman']) ? esc($transaksi['no_peminjaman']) : 'N/A' ?></td>
+                                        <td><?= isset($transaksi['nama_anggota']) ? esc($transaksi['nama_anggota']) : 'N/A' ?></td>
+                                        <td><?= isset($transaksi['tgl_pinjam']) ? date('d-m-Y', strtotime(esc($transaksi['tgl_pinjam']))) : 'N/A' ?></td>
+                                        <td><?= isset($transaksi['total_pinjam']) ? esc($transaksi['total_pinjam']) : 'N/A' ?></td>
+                                        <td><?= isset($transaksi['daftar_judul_buku']) ? esc($transaksi['daftar_judul_buku']) : 'N/A' ?></td>
                                         <td>
-                                            <?php if ($transaksi['status_transaksi'] == 'Berjalan') : ?>
+                                            <?php if (isset($transaksi['status_transaksi']) && $transaksi['status_transaksi'] == 'Berjalan') : ?>
                                                 <span class="label label-warning">Berjalan</span>
-                                            <?php elseif ($transaksi['status_transaksi'] == 'Selesai') : ?>
+                                            <?php elseif (isset($transaksi['status_transaksi']) && $transaksi['status_transaksi'] == 'Selesai') : ?>
                                                 <span class="label label-success">Selesai</span>
                                             <?php else: ?>
-                                                <span class="label label-default"><?= esc($transaksi['status_transaksi']) ?></span>
+                                                <span class="label label-default"><?= isset($transaksi['status_transaksi']) ? esc($transaksi['status_transaksi']) : 'N/A' ?></span>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= esc($transaksi['status_ambil_buku']) ?></td>
-                                        <td><?= esc($transaksi['nama_admin']) ?></td> <!-- Asumsi dari join -->
+                                        <td><?= isset($transaksi['status_ambil_buku']) ? esc($transaksi['status_ambil_buku']) : 'N/A' ?></td>
+                                        <td><?= isset($transaksi['nama_admin']) ? esc($transaksi['nama_admin']) : 'N/A' ?></td>
                                         <td>
                                             <?php if (!empty($transaksi['qr_code'])) : ?>
-                                                <img src="<?= base_url('Assets/qr_code/' . esc($transaksi['qr_code'])) ?>" alt="QR Code" style="width:60px; height:60px;">
+                                                <img src="<?= base_url('Assets/qr_code/' . esc($transaksi['qr_code'])) ?>" alt="QR Code" style="width:40px; height:40px;">
                                             <?php else : ?>
                                                 -
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('admin/detail-transaksi-peminjaman/' . $transaksi['no_peminjaman']) ?>" class="btn btn-info btn-xs">
-                                                <span class="glyphicon glyphicon-eye-open"></span> Lihat Detail
-                                            </a>
+                                            <?php if (isset($transaksi['no_peminjaman']) && $transaksi['no_peminjaman']) : ?>
+                                                <a href="<?= base_url('admin/detail-transaksi-peminjaman/' . esc($transaksi['no_peminjaman'])) ?>" class="btn btn-info btn-xs">
+                                                    <span class="glyphicon glyphicon-eye-open"></span> Lihat Detail
+                                                </a>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-info btn-xs" disabled>
+                                                    <span class="glyphicon glyphicon-eye-open"></span> Detail Tdk Tersedia
+                                                </button>
+                                            <?php endif; ?>
                                             <!-- Tambahkan tombol lain jika perlu, mis. Selesaikan Transaksi -->
-                                            <?php if ($transaksi['status_transaksi'] == 'Berjalan') : ?>
-                                                <!-- <a href="<?= base_url('admin/form-pengembalian/' . $transaksi['no_peminjaman']) ?>" class="btn btn-success btn-xs" style="margin-top:5px;">
+                                            <?php if (isset($transaksi['status_transaksi']) && $transaksi['status_transaksi'] == 'Berjalan' && isset($transaksi['no_peminjaman']) && $transaksi['no_peminjaman']) : ?>
+                                                <!-- <a href="<?= base_url('admin/form-pengembalian/' . esc($transaksi['no_peminjaman'])) ?>" class="btn btn-success btn-xs" style="margin-top:5px;">
                                                     <span class="glyphicon glyphicon-check"></span> Proses Pengembalian
                                                 </a> -->
                                             <?php endif; ?>
@@ -118,7 +124,7 @@
 
     function qrCodeFormatter(value, row) {
         if (row.qr_code) {
-            return '<img src="<?= base_url('Assets/qr_code/') ?>' + row.qr_code + '" style="width:60px; height:60px;" />';
+            return '<img src="<?= base_url('Assets/qr_code/') ?>' + row.qr_code + '" style="width:40px; height:40px;" />';
         }
         return '-';
     }

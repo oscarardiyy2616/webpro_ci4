@@ -67,4 +67,3 @@ $routes->get('/admin/hapus-temp-item/(:alphanum)', 'Admin::hapus_temp_item/$1');
 $routes->get('/admin/simpan-transaksi-peminjaman', 'Admin::simpan_transaksi_peminjaman');
 $routes->get('/admin/data-transaksi-peminjaman', 'Admin::data_transaksi_peminjaman');
 $routes->get('/admin/detail-transaksi-peminjaman/(:segment)', 'Admin::detail_transaksi_peminjaman/$1');
-// $routes->get('/admin/tes-qr', 'Admin::tes_qr'); // Jika ada method untuk tes QR

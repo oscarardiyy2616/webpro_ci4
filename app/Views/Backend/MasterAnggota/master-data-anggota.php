@@ -18,7 +18,7 @@
                     <?php
                     // Menampilkan pesan error/sukses
                     $error = session()->getFlashdata('error');
-                    $success = session()->getFlashdata('success');
+                    $success = session()->getFlashdata('success', 'anggota berhasil ditambahkan!');
                     if ($error) {
                         echo '<div class="alert alert-danger">' . esc($error) . '</div>';
                     }

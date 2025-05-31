@@ -87,13 +87,7 @@ class Anggota extends BaseController
             // Simpan data menggunakan model
             $modelAnggota->saveDataAnggota($datasimpan);
             session()->setFlashdata('success', 'Data Anggota Berhasil Ditambahkan!!');
-
-            // Redirect ke halaman master data anggota
-            ?>
-            <script>
-                document.location = "<?= base_url('anggota/master-data-anggota'); ?>";
-            </script>
-        <?php
+            return redirect()->to(base_url('anggota/master-data-anggota'));
         }
     }
 

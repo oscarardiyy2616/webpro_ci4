@@ -85,6 +85,7 @@
                             <div class="form-group">
                                 <div class="col-md-12 widget-right">
                                     <button type="submit" class="btn btn-primary btn-md pull-right">Simpan</button>
+                                    return redirect()->to(base_url('anggota/master-data-anggota'));
                                     <a href="<?= base_url('anggota/master-data-anggota'); ?>" class="btn btn-danger btn-md pull-right" style="margin-right: 10px;">Batal</a>
                                 </div>
                             </div>
