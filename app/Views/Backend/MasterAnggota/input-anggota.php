@@ -23,7 +23,7 @@
                         echo '<div class="alert alert-danger">' . esc($error) . '</div>';
                     }
                     if ($success) {
-                        echo '<div class="alert alert-success">' . esc($success) . '</div>';
+                        echo '<div class="alert alert-success">Data anggota berhasil ditambahkan!</div>';
                     }
                     ?>
                     <form class="form-horizontal" action="<?= base_url('anggota/simpan-data-anggota'); ?>" method="post">

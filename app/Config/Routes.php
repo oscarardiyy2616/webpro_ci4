@@ -27,6 +27,10 @@ $routes->post('anggota/simpan-data-anggota', 'Anggota::simpan_data_anggota');
 $routes->get('anggota/edit-data-anggota/(:segment)', 'Anggota::edit_data_anggota/$1');
 $routes->post('anggota/update-data-anggota', 'Anggota::update_data_anggota');
 $routes->get('anggota/hapus-data-anggota/(:segment)', 'Anggota::hapus_data_anggota/$1');
+$routes->get('anggota/form-peminjaman', 'Anggota::form_peminjaman');
+$routes->post('anggota/simpan_peminjaman', 'Anggota::simpan_peminjaman');
+$routes->get('anggota/data-peminjaman', 'Anggota::data_peminjaman');
+$routes->get('anggota/detail-peminjaman/(:segment)', 'Anggota::detail_peminjaman/$1');
 //buku
 $routes->get('/admin/master-buku', 'Admin::master_buku');
 $routes->get('/admin/edit-buku/(:alphanum)', 'Admin::edit_buku/$1');
@@ -50,3 +54,17 @@ $routes->get('kategori/edit-data-kategori/(:segment)', 'Kategori::edit_data_kate
 $routes->post('kategori/update-data-kategori', 'Kategori::update_data_kategori');
 $routes->get('kategori/hapus-data-kategori/(:segment)', 'Kategori::hapus_data_kategori/$1');
 
+
+
+
+
+// Routes untuk Transaksi Peminjaman (Pertemuan VII)
+$routes->get('/admin/peminjaman-step1', 'Admin::peminjaman_step1');
+$routes->post('/admin/peminjaman-step-2', 'Admin::peminjaman_step2'); // Dari form step 1
+$routes->get('/admin/peminjaman-step-2', 'Admin::peminjaman_step2');  // Untuk refresh atau kembali ke step 2
+$routes->get('/admin/simpan-temp-pinjam/(:alphanum)', 'Admin::simpan_temp_pinjam/$1');
+$routes->get('/admin/hapus-temp-item/(:alphanum)', 'Admin::hapus_temp_item/$1'); // Disesuaikan namanya
+$routes->get('/admin/simpan-transaksi-peminjaman', 'Admin::simpan_transaksi_peminjaman');
+$routes->get('/admin/data-transaksi-peminjaman', 'Admin::data_transaksi_peminjaman');
+$routes->get('/admin/detail-transaksi-peminjaman/(:segment)', 'Admin::detail_transaksi_peminjaman/$1');
+// $routes->get('/admin/tes-qr', 'Admin::tes_qr'); // Jika ada method untuk tes QR

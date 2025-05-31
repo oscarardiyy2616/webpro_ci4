@@ -277,4 +277,133 @@ class Anggota extends BaseController
         </script>
 <?php
     }
+
+    // Method untuk menampilkan form transaksi peminjaman
+    public function form_peminjaman()
+    {
+        // Cek session admin
+        if (session()->get('ses_id') == "" || session()->get('ses_user') == "" || session()->get('ses_level') == "") {
+            session()->setFlashdata('error', 'Silakan login terlebih dahulu!');
+?>
+            <script>
+                document.location = "<?= base_url('admin/login-admin'); ?>";
+            </script>
+        <?php
+        } else {
+            $modelAnggota = new \App\Models\M_Anggota();
+            $modelBuku = new \App\Models\M_Buku();
+            // Perbaiki: gunakan getResultArray() agar hasil array, bukan object
+            $data['anggota'] = $modelAnggota->getDataAnggota(['is_delete_anggota' => '0'])->getResultArray();
+            $data['buku'] = $modelBuku->getDataBuku(['is_delete_buku' => '0'])->getResultArray();
+            $data['dataBuku'] = $data['buku']; // Tambahkan baris ini agar $dataBuku tersedia di view
+            $data['web_title'] = "Form Transaksi Peminjaman";
+            echo view('Backend/Template/header', $data);
+            echo view('Backend/Template/sidebar', $data);
+            // GANTI: echo view('Backend/Transaksi/form-peminjaman', $data);
+            echo view('Backend/Transaksi/peminjaman_step1', $data);
+            echo view('Backend/Template/footer', $data);
+        }
+    }
+
+    // Method untuk menyimpan transaksi peminjaman
+    public function simpan_peminjaman()
+    {
+        if (session()->get('ses_id') == "" || session()->get('ses_user') == "" || session()->get('ses_level') == "") {
+            session()->setFlashdata('error', 'Silakan login terlebih dahulu!');
+?>
+            <script>
+                document.location = "<?= base_url('admin/login-admin'); ?>";
+            </script>
+        <?php
+            return;
+        }
+        $modelPeminjaman = new \App\Models\M_Peminjaman();
+        $id_anggota = $this->request->getPost('id_anggota');
+        $id_buku = $this->request->getPost('id_buku');
+        $tanggal_pinjam = $this->request->getPost('tanggal_pinjam');
+        $tanggal_kembali = $this->request->getPost('tanggal_kembali');
+        // Generate ID Peminjaman otomatis (misal: PMJ001 dst)
+        $last = $modelPeminjaman->orderBy('id_peminjaman', 'DESC')->first();
+        if (!$last) {
+            $id_peminjaman = 'PMJ001';
+        } else {
+            $kode = $last['id_peminjaman'];
+            $noUrut = (int)substr($kode, -3);
+            $noUrut++;
+            $id_peminjaman = 'PMJ' . sprintf('%03s', $noUrut);
+        }
+        $data = [
+            'id_peminjaman' => $id_peminjaman,
+            'id_anggota' => $id_anggota,
+            'id_buku' => $id_buku,
+            'tanggal_pinjam' => $tanggal_pinjam,
+            'tanggal_kembali' => $tanggal_kembali,
+            'status_peminjaman' => 'Dipinjam',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        $modelPeminjaman->saveDataPeminjaman($data);
+        session()->setFlashdata('success', 'Transaksi peminjaman berhasil disimpan!');
+?>
+        <script>
+            document.location = "<?= base_url('anggota/form-peminjaman'); ?>";
+        </script>
+    <?php
+    }
+
+    // Method untuk menampilkan data peminjaman
+    public function data_peminjaman()
+    {
+        if (session()->get('ses_id') == "" || session()->get('ses_user') == "" || session()->get('ses_level') == "") {
+            session()->setFlashdata('error', 'Silakan login terlebih dahulu!');
+?>
+            <script>document.location = "<?= base_url('admin/login-admin'); ?>";</script>
+        <?php
+            return;
+        }
+        $modelPeminjaman = new \App\Models\M_Peminjaman();
+        $modelAnggota = new \App\Models\M_Anggota();
+        $modelBuku = new \App\Models\M_Buku();
+        $dataPeminjaman = $modelPeminjaman->getDataPeminjaman();
+        $data = [];
+        foreach ($dataPeminjaman as $row) {
+            $anggota = $modelAnggota->getDataAnggota(['id_anggota' => $row['id_anggota']])->getRowArray();
+            $row['nama_anggota'] = $anggota ? $anggota['nama_anggota'] : '-';
+            $data[] = $row;
+        }
+        $data['data_peminjaman'] = $data;
+        $data['web_title'] = "Transaksi Peminjaman Buku";
+        echo view('Backend/Template/header', $data);
+        echo view('Backend/Template/sidebar', $data);
+        echo view('Backend/Transaksi/data-peminjaman', $data);
+        echo view('Backend/Template/footer', $data);
+    }
+
+    // Method untuk menampilkan detail peminjaman
+    public function detail_peminjaman($id)
+    {
+        if (session()->get('ses_id') == "" || session()->get('ses_user') == "" || session()->get('ses_level') == "") {
+            session()->setFlashdata('error', 'Silakan login terlebih dahulu!');
+?>
+            <script>document.location = "<?= base_url('admin/login-admin'); ?>";</script>
+        <?php
+            return;
+        }
+        $modelPeminjaman = new \App\Models\M_Peminjaman();
+        $modelAnggota = new \App\Models\M_Anggota();
+        $modelBuku = new \App\Models\M_Buku();
+        $row = $modelPeminjaman->where('id_peminjaman', $id)->first();
+        if ($row) {
+            $anggota = $modelAnggota->getDataAnggota(['id_anggota' => $row['id_anggota']])->getRowArray();
+            $buku = $modelBuku->find($row['id_buku']);
+            $row['nama_anggota'] = $anggota ? $anggota['nama_anggota'] : '-';
+            $row['judul_buku'] = $buku ? $buku['judul_buku'] : '-';
+        }
+        $data['detail'] = $row;
+        $data['web_title'] = "Detail Peminjaman Buku";
+        echo view('Backend/Template/header', $data);
+        echo view('Backend/Template/sidebar', $data);
+        echo view('Backend/Transaksi/detail-peminjaman', $data);
+        echo view('Backend/Template/footer', $data);
+    }
 }
